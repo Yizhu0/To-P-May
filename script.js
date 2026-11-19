@@ -47,8 +47,8 @@ $("yes").onclick = () => {
 };
 /* ปุ่ม "ไม่เอาแล้ว": หนี 3 รอบ แล้วกดได้จริง */
 const noBtn = $("no"), yesBtn = $("yes");
-const NO_TEXTS = ["ไม่เอาแล้ว","เอ๊ะ กดไม่ได้ 🙈","ลองอีกทีสิ 🥺","จะกดจริงๆ เหรอ 🥹","ไม่เอาแล้วจริงๆ"];
-const MAX_DODGE = 3;
+const NO_TEXTS = ["ไม่เอาแล้ว","เอ๊ะ กดไม่ได้ 🙈","จะกดจริงๆ เหรอ 🥹","ไม่เอาแล้วจริงๆ"];
+const MAX_DODGE = 2;
 let dodges = 0, lastDodge = 0;
 function dodge(e) {
   if (dodges >= MAX_DODGE) return;
