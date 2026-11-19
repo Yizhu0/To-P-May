@@ -45,8 +45,35 @@ $("yes").onclick = () => {
   show(3); mood("happy");
   for (let n = 0; n < 40; n++) setTimeout(() => fx(["💖","💕","🎀","✨","🤍","☁️"][Math.random()*6|0], 20 + Math.random()*26), n*90);
 };
-$("no").onclick = () => {
+/* ปุ่ม "ไม่เอาแล้ว": หนี 3 รอบ แล้วกดได้จริง */
+const noBtn = $("no"), yesBtn = $("yes");
+const NO_TEXTS = ["ไม่เอาแล้ว","เอ๊ะ กดไม่ได้ 🙈","ลองอีกทีสิ 🥺","จะกดจริงๆ เหรอ 🥹","ไม่เอาแล้วจริงๆ"];
+const MAX_DODGE = 3;
+let dodges = 0, lastDodge = 0;
+function dodge(e) {
+  if (dodges >= MAX_DODGE) return;
+  if (e && e.cancelable) e.preventDefault();
+  dodges++; lastDodge = Date.now();
+  noBtn.textContent = NO_TEXTS[dodges];
+  yesBtn.style.transform = `scale(${1 + dodges * 0.1})`;
+  if (dodges < MAX_DODGE) {
+    noBtn.style.transform = "";
+    const r = noBtn.getBoundingClientRect();
+    const x = 10 + Math.random() * (innerWidth - r.width - 20);
+    const y = 10 + Math.random() * (innerHeight - r.height - 20);
+    noBtn.style.transform = `translate(${x - r.left}px, ${y - r.top}px)`;
+  } else {
+    setTimeout(() => { noBtn.style.transform = ""; noBtn.textContent = NO_TEXTS[4]; }, 1100);
+  }
+}
+noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
+noBtn.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") dodge(e); });
+noBtn.addEventListener("click", e => {
+  if (dodges < MAX_DODGE) { if (Date.now() - lastDodge > 400) dodge(e); return; }
   clearInterval(ambient); show(4); mood("calm");
   for (let n = 0; n < 10; n++) setTimeout(() => fx(["🤍","☁️","🌷"][n % 3], 18 + Math.random()*10), n*300);
+});
+$("back").onclick = () => {
+  dodges = 0; noBtn.style.transform = ""; yesBtn.style.transform = ""; noBtn.textContent = NO_TEXTS[0];
+  mood(null); show(2); ambient = setInterval(() => fx("🤍", 18), 1500);
 };
-$("back").onclick = () => { mood(null); show(2); ambient = setInterval(() => fx("🤍", 18), 1500); };
